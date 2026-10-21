@@ -1,24 +1,21 @@
-// ---- Requests (what the client sends) ----
 export interface CreateCompanyDto {
   name: string;
   registrationNumber: string;
 }
 
 export interface CreateServiceDto {
-    companyId: number;
-    name: string;
-    description: string;
-    price: number;
-  // ✍️ YOUR TURN: which 4 fields does the client send to create a service?
+  companyId: number;
+  name: string;
+  description: string;
+  price: number;
 }
 
-// ---- Responses (what the API sends back) ----
 export interface ServiceResponseDto {
   id: number;
   companyId: number;
   name: string;
   description: string;
-  price: number;            // number, not Decimal
+  price: number; // DB simpan Decimal, tapi JSON kita hantar number (tengok toServiceDto)
   createdAt: Date;
   updatedAt: Date;
 }
@@ -27,12 +24,12 @@ export interface CompanyResponseDto {
   id: number;
   name: string;
   registrationNumber: string;
-  services: ServiceResponseDto[];   // GET /companies includes the services
+  services: ServiceResponseDto[];
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface ErrorResponseDto {
   message: string;
-  errors?: { field: string; message: string }[];   // per-field validation errors
+  errors?: { field: string; message: string }[];
 }

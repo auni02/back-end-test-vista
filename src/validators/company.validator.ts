@@ -3,9 +3,9 @@ import { body } from "express-validator";
 export const createCompanyRules = [
   body("name")
     .exists().withMessage("name is required")
-    .bail()                                    // stop checking this field if the previous check failed
+    .bail() // check atas fail? stop terus, tak payah spam 3 error untuk 1 masalah
     .isString().withMessage("name must be a string")
-    .trim()                                    // "  Acme  " → "Acme" (also changes req.body!)
+    .trim() // ni ubah req.body sekali tau. "   " jadi "", so notEmpty bawah tu fail
     .notEmpty().withMessage("name must not be empty"),
 
   body("registrationNumber")

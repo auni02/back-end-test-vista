@@ -5,7 +5,8 @@ import { validate } from "../middleware/validate";
 
 const router = Router();
 
-router.post("/", createCompanyRules, validate, createCompany);   // rules → check → handler
+// rules → validate → controller. Input salah, stop kat validate (400), tak sampai DB pun
+router.post("/", createCompanyRules, validate, createCompany);
 router.get("/", getCompanies);
 
 export default router;

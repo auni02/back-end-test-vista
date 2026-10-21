@@ -8,11 +8,12 @@ import { notFound } from "./middleware/notFound";
 
 const app = express();
 
-app.disable("x-powered-by");  // hide the X-Powered-By header
+app.disable("x-powered-by");
 
-app.use(cors());              // 1. add CORS headers to every response
-app.use(logger);              // 3. log each request (must run before the routes)
-app.use(express.json());      // 2. parse JSON bodies into req.body
+// Order penting gila: Express run ikut turutan. json() kena sebelum routes, kalau tak req.body kosong
+app.use(cors());
+app.use(logger);
+app.use(express.json());
 
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
@@ -20,7 +21,9 @@ app.get("/health", (req, res) => {
 
 app.use("/companies", companyRoutes);
 app.use("/services", serviceRoutes);
-app.use(notFound);            
-app.use(errorHandler);       
+
+// Dua ni MESTI paling last. Takde route match → notFound, ada error → errorHandler
+app.use(notFound);
+app.use(errorHandler);
 
 export default app;

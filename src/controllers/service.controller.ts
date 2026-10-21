@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
-import { toServiceDto } from "./company.controller";      // reuse, don't redefine
+import { toServiceDto } from "./company.controller";
 import { CreateServiceDto, ServiceResponseDto } from "../types/dto";
 
 type ErrorBody = { message: string };
@@ -11,13 +11,12 @@ export async function createService(
 ) {
   const { name, description, price, companyId } = req.body;
 
-  // 1. Does the company exist?
+  // Check company wujud dulu. Kalau tak, bagi 404 yang clear, bukan error foreign key yang pelik
   const company = await prisma.company.findUnique({ where: { id: companyId } });
   if (!company) {
     return res.status(404).json({ message: `Company with id ${companyId} not found` });
   }
 
-  // 2. Create the service
   const service = await prisma.service.create({
     data: { name, description, price, companyId },
   });
@@ -26,10 +25,11 @@ export async function createService(
 }
 
 export async function getServiceById(
-  req: Request<{ id: string }>,                 // params type: :id comes in as a string
+  req: Request<{ id: string }>,
   res: Response<ServiceResponseDto | ErrorBody>
 ) {
-  const id = Number(req.params.id);             // the validator checked it's an integer
+  // :id dari URL sentiasa string. Validator dah confirm dia integer, so Number() ni safe
+  const id = Number(req.params.id);
 
   const service = await prisma.service.findUnique({
     where: { id },

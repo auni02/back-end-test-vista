@@ -5,7 +5,7 @@ import { validate } from "../middleware/validate";
 
 const router = Router();
 
-router.post("/", createServiceRules, validate, createService);       // rules → check → handler
+router.post("/", createServiceRules, validate, createService);
 router.get("/:id", getServiceByIdRules, validate, getServiceById);
 
 export default router;
