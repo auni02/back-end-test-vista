@@ -22,8 +22,6 @@ This also runs `prisma generate` automatically, so the Prisma client is ready to
 
 **2. Set up your environment**
 
-Copy the example file and fill in your own database details:
-
 ```bash
 cp .env.example .env
 ```
@@ -33,7 +31,7 @@ DATABASE_URL="mysql://USER:PASSWORD@localhost:3306/vista_db"
 PORT=3000
 ```
 
-You don't need to create the `vista_db` database yourself. Prisma will create it in the next step if it doesn't exist.
+No need to create the `vista_db` database yourself. Prisma will create it.
 
 **3. Create the tables**
 
@@ -41,11 +39,7 @@ You don't need to create the `vista_db` database yourself. Prisma will create it
 npx prisma migrate deploy
 ```
 
-This applies the migrations in `prisma/migrations`. If you're changing the schema yourself, use `npm run prisma:migrate` instead, which creates new migrations as you go.
-
 **4. Start the server**
-
-For development (restarts when you save a file):
 
 ```bash
 npm run dev
@@ -58,9 +52,7 @@ npm run build
 npm start
 ```
 
-You should see `Server is running on http://localhost:3000`. A quick way to check everything is wired up is to open http://localhost:3000/health, which should return `{"status":"ok"}`.
-
-If you want to look at the data directly, `npm run prisma:studio` opens a browser view of the database.
+Should see `Server is running on http://localhost:3000`. A quick way to check everything is wired up is to open http://localhost:3000/health, and it should return `{"status":"ok"}`.
 
 ## Endpoints
 
@@ -84,7 +76,7 @@ Content-Type: application/json
 }
 ```
 
-Both fields are required and can't be blank. Registration numbers are unique, so sending one that already exists returns **409 Conflict**.
+Both fields can't be blank. Registration numbers are (unique), so sending one that already exists returns **409 Conflict**.
 
 ### Create a service
 
@@ -100,7 +92,7 @@ Content-Type: application/json
 }
 ```
 
-`companyId` must be the id of an existing company (otherwise you get **404**). `price` must be a positive number, up to 99,999,999.99. It's stored as a `DECIMAL(10,2)` so money values don't pick up floating-point rounding errors.
+`companyId` must be the id of an existing company (otherwise get **404**). `price` must be a number. It's stored as a `DECIMAL(10,2)`
 
 ### Errors
 
@@ -129,8 +121,6 @@ The full collection is in `postman/Vista-API.postman_collection.json`. In Postma
 All requests use a `{{baseUrl}}` collection variable, set to `http://localhost:3000` by default. If you run the API on a different port, change it once in the collection's **Variables** tab. Each request has saved example responses, including the error cases.
 
 ## Running with Docker
-
-There's a Dockerfile if you'd rather not install Node locally. You still need a MySQL database. Note that inside a container, `localhost` means the container itself, so to reach MySQL on your own machine use `host.docker.internal`:
 
 ```bash
 docker build -t vista-backend .
